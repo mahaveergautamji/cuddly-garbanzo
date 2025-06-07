@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MVS PDF Downloader</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f7f7f7; }
+    .log { margin-top: 20px; }
+    .log p { margin: 5px 0; }
+  </style>
+</head>
+<body>
+  <h1>MVS PDF Downloader (580 → 500)</h1>
+  <button onclick="downloadPDFs()">Start Download</button>
+
+  <div class="log" id="log"></div>
+
+  <script>
+    const baseUrl = "https://www.mvsfoundation.in/package/download/5acedf6e01ea68d478e65db5/";
+    const log = document.getElementById("log");
+
+    async function downloadPDFs() {
+      for (let id = 580; id >= 500; id--) {
+        const url = baseUrl + id;
+        try {
+          const response = await fetch(url, { method: 'HEAD' });
+
+          if (response.ok && response.headers.get("Content-Type").includes("pdf")) {
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `${id}.pdf`;
+            a.textContent = `Download ${id}.pdf`;
+            a.style.display = "block";
+            log.appendChild(a);
+          } else {
+            log.innerHTML += `<p>No PDF at ID ${id}</p>`;
+          }
+
+        } catch (err) {
+          log.innerHTML += `<p>Error checking ID ${id}: ${err}</p>`;
+        }
+      }
+    }
+  </script>
+</body>
+</html>
